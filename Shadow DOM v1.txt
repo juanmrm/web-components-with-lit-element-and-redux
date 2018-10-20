@@ -1,0 +1,295 @@
+Shadow DOM v1: Self-Contained Web Components
+
+  Solucionan problemas comunes que nos encontramos en el web development:
+    - Isolated DOM: A component's DOM is self-contained (e.g. document.querySelector() won't return nodes in the component's shadow DOM).
+    - Scoped CSS: CSS defined inside shadow DOM is scoped to it. Style rules don't leak out and page styles don't bleed in.
+    - Composition: Design a declarative, markup-based API for your component.
+    - Simplifies CSS - Scoped DOM means you can use simple CSS selectors, more generic id/class names, and not worry about naming conflicts.
+    - Productivity - Think of apps in chunks of DOM rather than one large (global) page.
+
+1 - What is Shadow DOM?
+
+  Es un DOM normal con 2 diferencias fundamentales:
+    - how it's created/used
+    - how it behaves in relation to the rest of the page.
+
+  Lo que haciamos tradicionalmente es crear DOM nodes y añadirlos como hijos de otro elemento.
+  Con Shadow DOM creamos un DOM tree (Shadow Tree) que esta vinculado al elemento pero separado de sus hijos.
+  El elemento se vincula a su Shadow Host y cualquier cosa que añadimos / modificamos en los shadows se refleja como cambio local en esta estructura.
+
+2 - Creating shadow DOM
+
+  Shadow Root: es una fragmento de documento que esta unido al "host" element (anfitrion)
+  De esta forma un elemento gana acceso al Shadow DOM.
+    p.e: 
+      const header = document.createElement('header');
+      const shadowRoot = header.attachShadow({mode: 'open'});
+
+  Hay una serie de elementos que no pueden albergar un shadow tree: http://w3c.github.io/webcomponents/spec/shadow/#h-methods
+
+  2.1 - Creating shadow DOM for a custom element
+
+    Use shadow DOM to compartmentalize an element's HTML, CSS, and JS, thus producing a "web component".
+    
+      constructor() {
+        super(); // always call super() first in the constructor.
+          
+        // Attach a shadow root to this component
+        const shadowRoot = this.attachShadow({mode: 'open'});
+        ...
+      }
+
+3 - Composition and slots
+
+  En el mundo del web development la composicion es la forma en la que construimos aplicaciones. Los distintos tags de HTML se unen y son utilizados para
+  formar las aplicaciones. Hay tags que aceptan ciertos tags como hijos definiendo un comportamiento especial como por ejemplo <select> y <option> <optgroup>
+
+  3.1 - Terminology: light DOM vs. shadow DOM
+
+    Light DOM: el HTML que escribe el consumidor del componente. Este DOM esta fuera del Shadow DOM del componente.
+    
+    Shadow DOM: el HTML que escribe el autor del componente. Shadow DOM es local al componente y define su estructura interna, CSS y encapsula los detalles de implementacion.
+      Ademas puede definir cómo renderizar el HTML que indica el consumidor del componente.
+
+    Flattened DOM tree: el resultado de que el navegador distribuya el Light DOM en el Shadow DOM, renderizando el producto final.
+
+  3.2 - The <slot> element
+
+    Slots are placeholders inside your component that users can fill with their own markup.
+
+    Distributed nodes: elements that are allowed to "cross" the shadow DOM boundary (when a <slot> invites them in).
+
+    Shadow DOM compone diferentes árboles DOM usando el elemento <slot>
+
+    Un componente puede definir 0 o mas slots. 
+    Un slot puede estar vacio o proporcionar fallback content que se usara si el usuario no proporciona Light DOM
+
+    Tambien tenemos los named slots, que son placeholders que los consumidores del componente referencian por nombre.
+
+    p.e:
+      <!-- Default slot. If there's more than one default slot, the first is used. -->
+      <slot></slot>
+
+      <!-- default slot with fallback content -->
+      <slot>fallback content</slot>
+
+      <!-- default slot with entire DOM tree as fallback -->
+      <slot>
+        <h2>Title</h2>
+        <summary>Description text</summary>
+      </slot>
+
+      <!-- Named slot -->
+      <slot id="tabsSlot" name="title"></slot>
+
+4 - Styling
+
+  4.1 - Component-defined styles
+
+    Una de las caracteristicas mas usadas del Shadow DOM es scoped CSS.
+
+    - CSS selectors from the outer page don't apply inside your component.
+    - CSS selectors used inside shadow DOM apply locally to your component and don't bleed out.
+
+    Web components can style themselves too, by using the :host(<selector>). 
+    A great way for your component to encapsulate behaviors that react to user interaction or state or style internal nodes based on the host.
+
+    p.e:
+      <style>
+        :host(:hover) {
+          opacity: 1;
+        }
+        :host([disabled]) { /* style when host has disabled attribute. */
+          background: grey;
+          pointer-events: none;
+          opacity: 0.4;
+        }
+        :host(.blue) {
+          color: blue; /* color host when it has class="blue" */
+        }    
+      </style>
+
+  4.2 - Styling based on context
+
+    :host-context(<selector>) matches the component if it or any of its ancestors matches <selector>
+    
+    Puede ser util para hacer theming basandonos en el entorno del componente, pero para esto es mejor aun usar style hooks using CSS custom properties.
+
+    p.e:
+      <body class="darktheme">
+        <fancy-tabs>
+          ...
+        </fancy-tabs>
+      </body>
+
+      :host-context(.darktheme) {
+        color: white;
+        background: black;
+      }
+
+  4.3 - Styling distributed nodes
+
+    ::slotted(<compound-selector>) matches nodes that are distributed into a <slot>.
+
+    Warning because can only select top-level nodes. This is due tu the <slot> renders their DOM but the nodes physically stay put.
+    
+    Styles that applied before distribution continue to apply after distribution.
+
+    p.e:
+      <name-badge>
+        <h2>Eric Bidelman</h2>
+        <span class="title">
+          Digital Jedi, <span class="company">Google</span>
+        </span>
+      </name-badge>
+
+    <style>
+      ::slotted(h2) {
+        color: red;
+      }
+      ::slotted(.title) {
+        color: orange;
+      }
+      
+      /* DOESN'T WORK (can only select top-level nodes).
+      ::slotted(.title .company) {
+        text-transform: uppercase;
+      }
+      */
+    </style>
+
+  4.4 - Styling a component from the outside
+
+    Outside styles always win over styles defined in shadow DOM
+
+    The easiest to style a component from outside is to use the tag name as a selector
+
+    What about styling the internals of a component? -> We need CSS custom properties
+      
+      Creating style hooks using CSS custom properties. Author of the component creates "style placeholders" for users to override. The idea is similar to <slot>
+      
+      p.e:
+        <!-- main page -->
+        <style>
+          fancy-tabs {
+            margin-bottom: 32px;
+            --fancy-tabs-bg: black;
+          }
+        </style>
+        <fancy-tabs background>...</fancy-tabs>
+
+        <!-- inside its shadow DOM -->
+        :host([background]) {
+            background: var(--fancy-tabs-bg, #9E9E9E);
+            border-radius: 10px;
+            padding: 10px;
+        }
+
+5 - Advanced topics      
+
+  5.1 - Creating closed shadow roots (should avoid)
+
+    There's another flavor of shadow DOM called "closed" mode. When you create a closed shadow tree, outside JS won't be able to access the internal DOM of your component.
+
+    el.attachShadow({mode: 'closed'}); // close shadow tree
+    
+    Summary of why you should not create web components with {mode: 'closed'}:
+      - Artificial sense of security
+      - Closed mode prevents your custom element code from accessing its own shadow DOM. That's complete fail. Instead, you'll have to stash a reference for later if you want to use things like querySelector(). 
+        This completely defeats the original purpose of closed mode!
+      - Closed mode makes your component less flexible for end users
+
+  5.2 - Working with slots in JS
+
+    Shadow DOM API provides utilities for working with slots and distributed nodes.
+
+    - slotchange event: event fires when a slot's distributed nodes changes
+    - get elements rendered in a slot with slot.assignedNodes()
+    - element.assignedSlot tells you which of the component slots your element is assigned to.
+
+  5.3 - The Shadow DOM event model
+    
+    Events are re-targeted / adjusted to look like they've come from the component rather than internal elements within your shadow DOM
+    
+    Notice that not all events will propagate out of shadow DOM.
+
+    Use the composed: true flag to force a custom event to bubble outside the shadow boundary when fired on a internal node of the shadow DOM.
+
+    p.e:
+      // Inside <fancy-tab> custom element class definition:
+      selectTab() {
+        const tabs = this.shadowRoot.querySelector('#tabs');
+        tabs.dispatchEvent(new Event('tab-select', {bubbles: true, composed: true}));
+      }
+
+  5.4 - Handling focus
+
+    Recall from shadow DOM's event model, events that are fired inside shadow DOM are adjusted to look like they come from the hosting element.
+
+    So to be able to access the internal node that gained focus we should do:
+      document.activeElement.shadowRoot.activeElement // only works with open mode.
+
+    If there are multiple levels of shadow DOM at play (say a custom element within another custom element), you need to recursively
+    drill into the shadow roots to find the activeElement:
+
+    Another option for focus is the delegatesFocus: true option, which expands the focus behavior of element's within a shadow tree
+      - If you click a node inside shadow DOM and the node is not a focusable area, the first focusable area becomes focused.
+      - When a node inside shadow DOM gains focus, :focus applies to the host in addition to the focused element.
+
+      const root = this.attachShadow({mode: 'open', delegatesFocus: true});
+
+  6 - Tips & Tricks
+
+    Useful for authoring components and debugging shadow DOM.
+
+      6.1 - Use CSS containment: typically, a web component's layout/style/paint is fairly self-contained.
+
+        <style>
+          :host {
+            display: block;
+            contain: content; /* Boom. CSS containment FTW better performance. */
+          }
+        </style>
+
+      6.2 - Resetting inheritable styles
+
+        Use all: initial; to reset inheritable styles to their initial value when they cross the shadow boundary (default behaviour)
+
+        :host {
+          all: initial; /* 1st rule so subsequent properties are reset. */
+          display: block;
+          background: white;
+        }
+
+      6.3 - Finding all the custom elements used by a page
+
+        const allCustomElements = [];
+
+        function isCustomElement(el) {
+          const isAttr = el.getAttribute('is');
+          // Check for <super-button> and <button is="super-button">.
+          return el.localName.includes('-') || isAttr && isAttr.includes('-');
+        }
+
+        function findAllCustomElements(nodes) {
+          for (let i = 0, el; el = nodes[i]; ++i) {
+            if (isCustomElement(el)) {
+              allCustomElements.push(el);
+            }
+            // If the element has shadow DOM, dig deeper.
+            if (el.shadowRoot) {
+              findAllCustomElements(el.shadowRoot.querySelectorAll('*'));
+            }
+          }
+        }
+
+        findAllCustomElements(document.querySelectorAll('*'));
+
+      6.4 - Creating elements from a <template>
+
+        Instead of populating a shadow root using .innerHTML, we can use a declarative <template>. 
+        Templates are an ideal placeholder for declaring the structure of a web component.
+    
+
+
+
