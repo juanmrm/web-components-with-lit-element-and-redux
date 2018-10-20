@@ -1,0 +1,198 @@
+https://developers.google.com/web/fundamentals/web-components/customelements
+
+Nos permiten:
+  - Crear nuevas HTLM tags
+  - Enriquecer las existentes
+  - Extender otros componentes ya desarrollados
+
+Nos permiten empaquetar estructura (HTLM) y comportamiento (JS) en nuevos componentes
+
+Grand picture of Web Components:
+  - Cross-browser (web standard) for creating and extending reusable components.
+  - Requires no library or framework to get started. Vanilla JS/HTML FTW!
+  - Provides a familiar programming model. It's just DOM/CSS/HTML.
+  - Works well with other new web platform features (Shadow DOM, <template>, CSS custom properties, etc.)
+  - Tightly integrated with the browser's DevTools.
+  - Leverage existing accessibility features.
+
+1 - Defining a new element
+
+  Invocamos a customElements.define(tagName, constructor, options)
+
+  tagName:
+    - debe contener un dash (-) p.e: my-element, para que HTLM parser distinga custom element y regular elements
+    - registrado 1 sola vez, sino DOMException
+    - no pueden ser self-closing tags -> especificar cierre etiqueta <x-tag></x-tag>
+
+  defClass:
+    - ES2015 class que extiende HTMLElement y define el API del componente usando JS
+    - Extender de HTMLElement nos proporciona acceso a todo el DOM API (propiedades, metodos...)
+    - this dentro de nuestra class referencia al DOM element, pudiendo asi registrar listeners, usar this.children, this.querySelectorAll()... 
+
+  p.e:
+    class AppDrawer extends HTMLElement {
+      ...
+    }
+    window.customElements.define('app-drawer', AppDrawer)
+
+2 - Custom Element Reactions
+
+  Reaction callbacks are synchronouss
+
+  Proporcionan special lifecycle hooks para ejecutar código durante los instantes interesantes del ciclo de vida del componente
+    - constructor: instancia creada o actualizada. 
+      Usar para inicializar estado, atachear listeners, crear shadow dom.
+      La primera linea siempre será super();
+    
+    - connectedCallback: llamado cada vez que el elemento se inserta en el DOM. 
+      Usado para setup code, fecth resources o rendering.
+    
+    - disconnectedCallback: cuando el elemento se elimina del DOM.
+      Usado para clen up code.
+
+    - attributeChangedCallback(attrName, oldVal, newVal): llamado cuando un observed attribute es añadido, borrado, actualizado o remplazado
+    
+    - adoptedCallback(): el elemento se ha movido a un nuevo documento (document.adoptNode(el))
+
+3 - Properties and attributes
+
+  Keep the element's DOM representation in sync with its JavaScript state
+
+  3.1 - Reflecting properties to attributes
+
+    Es comun que HTLM properties reflejen su valor en el DOM como HTLM attributes.
+      p.e: div.id = 'my-id'; -> <div id="my-id">
+
+    Los atributos son utiles para configurar el elemento declarativamente, para los CSS selectors, accesibilidad...
+    
+  3.2 - Observing changes to attributes
+
+    Reaccionar a cambios en atributos definiendo attributeChangedCallback.
+    
+    El navegador invocará al metodo para aquellos atributos indicados en array observedAttributes
+
+4 - Element upgrades
+
+    Custom elements can be used before (state of limbo) their definition is finally registered.
+
+    El navegador marca estas etiquetas desconocidas pero cuyo nombre cumple con las reglas de custom elements como potenciales custom elements.
+    "Element upgrades" es el proceso de vincular un elemento existente con una definicion de clase invocando el metodo define(tag, class)
+
+    Para saber cuando un elemento queda definido usar window.customElements.whenDefined() que devuelve una Promise
+      p.e: 
+        customElements.whenDefined('app-drawer').then(() => {
+          console.log('app-drawer defined');
+        });
+
+    Otro ejemplo seria retrasar delay work until a set of child elements are upgraded
+
+5 - Element-defined content
+
+      Los Custom Elements gestionan su propio contenido usando el DOM API y element Reactions.
+
+      No es buena idea el sobreescribir el contenido de los hijos del elemento que definimos puesto que para los usuarios que usen
+      este componente seria un comportamiento no esperado.
+
+      La forma más simple de dar contenido seria p.e:
+        customElements.define('x-foo-with-markup', class extends HTMLElement {
+          connectedCallback() {
+            this.innerHTML = "<b>I'm an x-foo-with-markup!</b>";
+          }
+        ...
+        });
+
+    Pero hay una forma mejor de definir el contenido del elemento -> Shadow DOM
+
+    5.1 - Creating an element that uses Shadow DOM
+
+      Provides a way for an element to own, render, and style a chunk of DOM that's separate from the rest of the page.
+
+      Llamada en el constructor:
+        
+        constructor() {
+          super(); // always call super() first in the constructor.
+
+          // Attach a shadow root to the element.
+          let shadowRoot = this.attachShadow({mode: 'open'});
+          shadowRoot.appendChild(tmpl.content.cloneNode(true));
+        }
+
+        Notese que aqui tmpl es un template element usado para clonar el DOM en vez de settear innerHTML en el shadowRoot, por performance.
+
+    5.2 - Creating elements from a <template>
+
+      Templates are an ideal placeholder for declaring the structure of a custom element.
+      Declare fragments of HTML that can be cloned and inserted in the document by script.
+
+      <template> permite declarar fragmentos de DOM que son parseados, inactivos en la carga de la pagina 
+      y que pueden activarse más tarde en runtime.
+
+    The purpose is:
+      1 - Defining a new element in HTML
+      2 - The element's Shadow DOM is created from a <template>
+      3 - The element's DOM is local to the element thanks to Shadow DOM
+      4 - The element's internal CSS is scoped to the element thanks to Shadow DOM
+
+6 - Styling a custom element
+
+  Aunque nuestro elemento defina sus propios estilos usando el Shadow DOM, un usuario puedes customizarlos desde su pagina.
+  A efectos de CSS specificity los estilos del usuario ganan sobre los estilos definidos en Shadow DOM.
+
+  6.1 - Pre-styling unregistered elements
+
+    Antes de que se haga el "element upgraded" podemos selecionar en CSS usando :not(:defined) pseudo-class por ejemmplo para
+    evitar el temido FOUC (Flash of Unstyled Content).
+
+7 - Extending elements (custom or browser's built-in HTML)
+
+  7.1 - Extending a custom element
+
+    Extendemos la clase definida p.e: class FancyDrawer extends AppDrawer {...}
+  
+  7.2 - Extending native HTML elements
+
+    Un customized built-in element es un custom element que extiende un browser's built-in HTML tag.
+
+    No existe mejor forma de crear un PWA (Progressive web app) que extender y enriquecer los elementos HTLM existentes.
+
+    Hay que extender del DOM interface que corresponda https://html.spec.whatwg.org/multipage/indices.html#element-interfaces
+    p.e: 
+      class FancyButton extends HTMLButtonElement {...}
+      customElements.define('fancy-button', FancyButton, {extends: 'button'});
+
+      Notese que cambia la llamada a define, añadiendo un tercer parametro que especifica el tag concreto que estamos extendiendo.
+      Esto es necesario la misma DOM interface es compartida por varios HTLM tags.
+
+    Un consumidor lo puede utilizar de distintas formas:
+      - Declaracion con is="" attribute en el tag nativo: <button is="fancy-button" disabled>Fancy button!</button>
+      - Crear una instancia en JS: 
+          p.e.1: 
+            let btn = document.createElement('button', {is: 'fancy-button'});
+          p.e.2: 
+            const BiggerImage = customElements.get('bigger-img');
+            const image = new BiggerImage(15, 20); // pass constructor values like so.
+
+      - New operator en JS: new FancyButton();
+    
+8 - Unknown elements vs. undefined custom elements
+
+  HTML es flexible y acepta tags que no existen, pero las marca con 2 tipos distintos.
+
+  Potenciales custom elements -> HTMLElement
+  Otras tags desconocidas -> HTMLUnknownElement
+
+  p.e:
+    document.createElement('tabs') instanceof HTMLUnknownElement === true
+    document.createElement('x-tabs') instanceof HTMLElement === true
+
+9 - API reference
+
+  - define(tagName, constructor, options): para crear nuevos custom elements
+  
+  - get(tagName): devuelve el constructor del custom element que coincide con ese tagName o undefined
+  
+  - whenDefined(tagName): devuelve una Promise que se resuelve cuando el custom element queda definido
+
+10 - Browser support
+
+  Check with const supportsCustomElementsV1 = 'customElements' in window;
