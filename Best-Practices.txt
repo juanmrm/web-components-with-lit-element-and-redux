@@ -1,0 +1,23 @@
+https://developers.google.com/web/fundamentals/web-components/best-practices
+
+Checklist:
+  
+  Shadow DOM:
+    - Create a shadow root to encapsulate styles
+    - Create your shadow root in the constructor
+    - Place any children the element creates into its shadow root
+    - Set a :host display style (e.g. block, inline-block, flex) unless you prefer the default of inline.
+    - Add a :host display style that respects the hidden attribute for supporting it: :host([hidden]) { display: none }.
+  
+  Attributes and properties:
+    - Do not override author-set, global attributes
+    - Always accept primitive data (strings, numbers, booleans) as either attributes or properties
+    - Aim to keep primitive data attributes and properties in sync, reflecting from property to attribute, and vice versa.
+    - Aim to only accept rich data (objects, arrays) as properties not in attributes
+    - Do not reflect rich data properties to attributes
+    - Consider checking for properties that may have been set before the element upgraded
+    - Do not self-apply classes: express component state using attributes. The class attribute is generally considered to be owned by the developer using your element.   
+
+  Events:
+    - Dispatch events in response to internal component activity
+    - Do not dispatch events in response to the host setting a property (downward data flow)
