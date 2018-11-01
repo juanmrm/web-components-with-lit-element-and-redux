@@ -1,0 +1,22 @@
+{
+  "name": "timer",
+  "description": "",
+  "main": "index.js",
+  "authors": [
+    "Juan Miguel Rodriguez Martin"
+  ],
+  "license": "ISC",
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "web-component-tester": "Polymer/web-component-tester#^6.5.0"
+  }
+}

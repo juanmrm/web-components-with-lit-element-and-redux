@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Timer App</title>
+        <script src="node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle.js"></script>
+    </head>
+    <body>
+        <script>
+            // Needed to avoid redux Uncaught ReferenceError: process is not defined
+            window.process = { env: { NODE_ENV: undefined } };    
+        </script>
+        <script type="module" src="./timer-app/timer-app.js"></script>
+        <timer-app></timer-app>
+    </body>
+</html>
