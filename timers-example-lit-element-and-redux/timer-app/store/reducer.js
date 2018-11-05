@@ -1,11 +1,13 @@
-import { initialState } from './state';
+// Define the initial state
+import initialState from './state';
 
 // Import actions
 import { 
   ADD_TIMER,
   DELETE_TIMER,
   PAUSE_OR_RESUME_TIMER,
-  UPDATE_TIMERS
+  UPDATE_TIMERS,
+  RESET_STATE
 } from './actions.js';
 
 // Create default action
@@ -14,7 +16,7 @@ export const DEFAULT_ACTION = '';
 /**
  * Main reducer.
 */
-export function timerAppReducer(state = initialState, action = DEFAULT_ACTION) {
+export function timerAppReducer(state, action = DEFAULT_ACTION) {
   switch (action.type) {
     case ADD_TIMER: {
         state.id += 1;
@@ -41,6 +43,9 @@ export function timerAppReducer(state = initialState, action = DEFAULT_ACTION) {
             }
         })
         return { ...state, timers: [...state.timers] };
+    }
+    case RESET_STATE: {
+        return { ...initialState };
     }
 
     // If we don't know what is going on, return the same state

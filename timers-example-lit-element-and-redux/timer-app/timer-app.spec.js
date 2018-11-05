@@ -1,6 +1,10 @@
 import './timer-app';
 import { dispatchCustomEvent } from '../test/dataHelper'
 
+// Access shared state by importing the same Redux store as other elements
+import { store } from './store/store';
+import { resetState } from './store/actions';
+
 describe('timer-app', () => {
     let sandbox;
     let element;
@@ -18,8 +22,8 @@ describe('timer-app', () => {
 
     beforeEach(async() => {
 
-        // TODO: Restore Store Initial State using another action like RESET ?
-
+        // TODO: Restore Store initial state using RESET action or another way?
+        store.dispatch(resetState());
 
         element = await fixture('timer-app');
         // TODO: not the same behaviour as in LionTest, need to to flush here in order to be able to retrieve elements
