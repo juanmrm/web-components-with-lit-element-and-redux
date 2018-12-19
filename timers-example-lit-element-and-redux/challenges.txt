@@ -1,0 +1,23 @@
+HTML (content) + CSS (estilos) + JS (comportamiento)
+
+- encapsulate component code
+- reusable web components
+- interoperable web components
+- framework vs library
+    
+Un framework tiene generalmente:
+    - gestion consistente del estado
+    - router
+    ...
+
+Web component:
+    - interoperable con framework Angular, Vue, React...
+
+Interoperable:
+    - indicar cuál debe de ser el estado del componente sólo mediante atributos y propiedades
+    - puede escuchar eventos y responder a los eventos
+    - puede emitir eventos para que otros componentes actuen
+
+Roadmap with the goal of make web components easier to use:
+    Polymer 1 -> Polymer 2 -> Polymer 3 (state of maturity) -> Lit Element + lit-html
+
