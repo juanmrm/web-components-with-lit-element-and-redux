@@ -14,12 +14,14 @@
     "redux": "^4.0.1"
   },
   "devDependencies": {
+    "@babel/core": "^7.4.5",
+    "@babel/polyfill": "^7.4.4",
     "@open-wc/testing-helpers": "^0.9.6",
-    "babel-polyfill": "^6.26.0",
     "chai": "^4.2.0",
     "eslint": "^5.8.0",
     "istanbul-instrumenter-loader": "^3.0.1",
     "karma": "^4.1.0",
+    "karma-babel-preprocessor": "^8.0.0",
     "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^2.2.0",
     "karma-coverage-istanbul-reporter": "^2.0.5",

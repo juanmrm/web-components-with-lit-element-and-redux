@@ -36,7 +36,8 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-        '**/test/timer-item.test.js',
+        'node_modules/@babel/polyfill/dist/polyfill.js',
+        './src/packages/**/test/timer-item.test.js',
     ],
 
     // list of files / patterns to exclude

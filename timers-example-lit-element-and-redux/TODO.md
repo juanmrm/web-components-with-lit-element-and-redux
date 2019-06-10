@@ -1,1 +1,2 @@
-- TODO: Cannot execute all test because of "Failed to execute 'define' on 'CustomElementRegistry': this name has already been used with this registry"
+- TODO: With only one test: TypeError: chai__WEBPACK_IMPORTED_MODULE_3___default(...) is not a function
+- TODO: With all test files: Cannot execute all test because of "Failed to execute 'define' on 'CustomElementRegistry': this name has already been used with this registry"
