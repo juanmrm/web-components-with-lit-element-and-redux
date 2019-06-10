@@ -1,6 +1,7 @@
 import '../timer-item.js';
 import sinon from 'sinon';
 import { fixture, nextFrame, oneEvent } from '@open-wc/testing-helpers';
+import expect from 'chai';
 
 describe('timer-item', () => {
     let element;
@@ -17,8 +18,8 @@ describe('timer-item', () => {
             expect(element.shadowRoot.querySelector('.name').innerText).to.equal('Test');
             expect(element.shadowRoot.querySelector('.time').innerText).to.equal('1h 30m 50s');
             expect(element.shadowRoot.querySelector('.delete').innerText).to.equal('Delete');
-            expect(element.shadowRoot.querySelector('.pauseOrResume').innerText).to.equal('Pause');            
-        });        
+            expect(element.shadowRoot.querySelector('.pauseOrResume').innerText).to.equal('Pause');                   
+        });
     });
 
     describe('when state is PAUSED', () => {
@@ -26,7 +27,7 @@ describe('timer-item', () => {
             element.setAttribute('state', 'PAUSED');
             await nextFrame();
             expect(element.shadowRoot.querySelector('.delete').innerText).to.equal('Delete');
-            expect(element.shadowRoot.querySelector('.pauseOrResume').innerText).to.equal('Resume');
+            expect(element.shadowRoot.querySelector('.pauseOrResume').innerText).to.equal('Resume');            
         });
     });
 

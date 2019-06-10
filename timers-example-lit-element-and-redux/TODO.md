@@ -1,2 +1,1 @@
 - TODO: Cannot execute all test because of "Failed to execute 'define' on 'CustomElementRegistry': this name has already been used with this registry"
-- TODO: Coverage report is not working

@@ -10,7 +10,7 @@ const webpackConfig = {
         loader: require.resolve('istanbul-instrumenter-loader'),
         enforce: 'post',
         include: path.resolve('./'),
-        exclude: /node_modules|bower_components|assets|\.(spec|test|style)\.js$/,
+        exclude: /node_modules|assets|\.(spec|test|style)\.js$/,
         options: {
           esModules: true,
         },
@@ -32,11 +32,11 @@ module.exports = function(config) {
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['mocha'],
+    frameworks: ['mocha', 'chai'],
 
     // list of files / patterns to load in the browser
     files: [
-        '**/test/*.test.js',
+        '**/test/timer-item.test.js',
     ],
 
     // list of files / patterns to exclude
@@ -57,7 +57,7 @@ module.exports = function(config) {
 
     client: {
       mocha: {
-        timeout: 5000, // 5 seconds - upped from 2 seconds
+        timeout: 2000,
       },
     },
 
@@ -85,7 +85,7 @@ module.exports = function(config) {
 
     // level of logging
     // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
-    logLevel: config.LOG_INFO,
+    logLevel: config.LOG_DEBUG,
 
     // enable / disable watching file and executing tests whenever any file changes
     autoWatch: false,
