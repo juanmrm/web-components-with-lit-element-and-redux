@@ -53,7 +53,7 @@ describe('timer-item', () => {
     });
 
     describe('when click on pause or resume button', () => {
-        it('should fire a pauseorresumetimer event', () => {
+        it('should fire a pauseorresumetimer event', async () => {
             let spy = sinon.spy(element, '_onPauseOrResumeClick');
             const evt = await oneEvent(element, 'pauseorresumetimer');
             expect(evt.detail.id).to.be.equal(1);
