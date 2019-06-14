@@ -1,3 +1,4 @@
+import defineWhenNotExist from '../util/customElement.js';
 import TimerItem from "./TimerItem.js";
 
-window.customElements.define("timer-item", TimerItem);
+defineWhenNotExist("timer-item", TimerItem);

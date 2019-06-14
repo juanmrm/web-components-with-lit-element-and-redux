@@ -1,3 +1,4 @@
+import defineWhenNotExist from '../util/customElement.js';
 import TimerNewForm from "./TimerNewForm.js";
 
-window.customElements.define("timer-new-form", TimerNewForm);
+defineWhenNotExist("timer-new-form", TimerNewForm);

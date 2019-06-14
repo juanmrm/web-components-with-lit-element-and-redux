@@ -1,3 +1,4 @@
+- TODO: Why need to use defineWhenNotExist (customElement.js helper)
 - TODO: Fix tests
 - TODO: Add Eslint configuration
 - TODO: Add Format configuration

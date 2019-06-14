@@ -1,7 +1,7 @@
 import '../timer-app.js';
 import { dispatchCustomEvent } from '../../util/dataHelper.js';
 import sinon from 'sinon';
-import { expect, html, fixture } from '@open-wc/testing';
+import { expect, html, fixture, aTimeout } from '@open-wc/testing';
 
 // Access shared state by importing the same Redux store as other elements
 import { store } from '../store/store';
