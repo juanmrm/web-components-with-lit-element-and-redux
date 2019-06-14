@@ -49,7 +49,7 @@ describe('timer-app', () => {
         it('should create and display the timer', async () => {
             let spy = sinon.spy(element, '_addNewTimer');
             dispatchCustomEvent(timerNewForm, 'newtimer', timersPayload[0]);
-            await aTimeout(50);
+            await aTimeout(25);
             expect(spy.calledOnce).to.be.true;
             expect(element.timers).to.have.lengthOf(1);
             let timers = timerList.shadowRoot.querySelectorAll('timer-item');
@@ -66,7 +66,7 @@ describe('timer-app', () => {
         it('should update their status every second', async () => {
             dispatchCustomEvent(timerNewForm, 'newtimer', timersPayload[0]);
             dispatchCustomEvent(timerNewForm, 'newtimer', timersPayload[1]);
-            await aTimeout(50);
+            await aTimeout(1000);
             expect(element.timers).to.have.lengthOf(2);                
             expect(element.timers[0].time).to.be.equal(0);
             expect(element.timers[0].state).to.be.equal('FINISH');
@@ -81,7 +81,7 @@ describe('timer-app', () => {
             dispatchCustomEvent(timerNewForm, 'newtimer', timersPayload[0]);
             dispatchCustomEvent(timerNewForm, 'newtimer', timersPayload[1]);
             dispatchCustomEvent(timerList, 'deletetimer', { id: timersPayload[0].id})            
-            await aTimeout(50);
+            await aTimeout(25);
             expect(spyDelete.calledOnce).to.be.true;
             expect(element.timers).to.have.lengthOf(1);                
             spyDelete.restore();
@@ -93,7 +93,7 @@ describe('timer-app', () => {
             let spyPause = sinon.spy(element, '_pauseOrResumeTimer');
             dispatchCustomEvent(timerNewForm, 'newtimer', timersPayload[0]);
             dispatchCustomEvent(timerList, 'pauseorresumetimer', { id: timersPayload[0].id});
-            await aTimeout(50);
+            await aTimeout(25);
             expect(spyPause.calledOnce).to.be.true;                
             expect(element.timers).to.have.lengthOf(1);
             expect(element.timers[0].state).to.be.equal('PAUSED');      

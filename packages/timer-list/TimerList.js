@@ -11,6 +11,11 @@ export default class TimerList extends LitElement {
         };
     }
 
+    constructor() {
+      super();
+      this.timers = [];
+    }
+
     render() {
 
         const timersTemplate = this.timers.map(t => html`

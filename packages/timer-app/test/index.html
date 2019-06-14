@@ -11,6 +11,9 @@
   <script>
     /* global mocha */
     mocha.setup('bdd');
+
+    // For Redux
+    window.process = { env: { NODE_ENV: 'dev' } };
   </script>
 
   <script type="module">

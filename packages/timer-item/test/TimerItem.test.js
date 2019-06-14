@@ -43,11 +43,13 @@ describe('timer-item', () => {
     describe('when click on delete button', () => {
         it('should fire a deleteClick event', async () => {
             let spy = sinon.spy(element, '_onDeleteClick');
+            setTimeout(() => {
+              element.shadowRoot.querySelector('.delete').click();
+            });
             const evt = await oneEvent(element, 'deletetimer');
             expect(evt.detail.id).to.be.equal(1);
             expect(spy.calledOnce).to.be.true;
             expect(spy.calledWith(1)).to.be.true;
-            element.shadowRoot.querySelector('.delete').click();                            
             spy.restore();
         });
     });
@@ -55,6 +57,9 @@ describe('timer-item', () => {
     describe('when click on pause or resume button', () => {
         it('should fire a pauseorresumetimer event', async () => {
             let spy = sinon.spy(element, '_onPauseOrResumeClick');
+            setTimeout(() => {
+              element.shadowRoot.querySelector('.pauseOrResume').click();
+            });
             const evt = await oneEvent(element, 'pauseorresumetimer');
             expect(evt.detail.id).to.be.equal(1);
             expect(spy.calledOnce).to.be.true;

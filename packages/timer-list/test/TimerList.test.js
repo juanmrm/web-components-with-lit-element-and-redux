@@ -1,5 +1,5 @@
 import '../timer-list.js';
-import { expect, html, fixture } from '@open-wc/testing';
+import { expect, html, fixture, nextFrame } from '@open-wc/testing';
 
 describe('timer-list', () => {
     let element;
@@ -10,8 +10,6 @@ describe('timer-list', () => {
 
     describe('when there are no timers', () =>  {
         it('should display an empty list', async () => {
-            element.timers = [];
-            await nextFrame();
             expect(element.shadowRoot.querySelectorAll('timer-item')).to.be.empty;
         });
     });
