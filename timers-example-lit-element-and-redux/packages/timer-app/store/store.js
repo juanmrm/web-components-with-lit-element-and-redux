@@ -2,7 +2,7 @@
 import { createStore } from 'redux';
 
 // Define the initial state
-import initialState from './state';
+import initialState from './state.js';
 
 // Import main app reducer
 import { timerAppReducer } from './reducer.js';

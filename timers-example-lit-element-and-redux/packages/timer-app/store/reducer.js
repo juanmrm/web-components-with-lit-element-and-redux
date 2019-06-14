@@ -1,5 +1,5 @@
 // Define the initial state
-import initialState from './state';
+import initialState from './state.js';
 
 // Import actions
 import { 

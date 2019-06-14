@@ -1,13 +1,12 @@
 import '../timer-item.js';
 import sinon from 'sinon';
-import { fixture, nextFrame, oneEvent } from '@open-wc/testing-helpers';
-import expect from 'chai';
+import { expect, html, nextFrame, fixture, oneEvent } from '@open-wc/testing';
 
 describe('timer-item', () => {
     let element;
 
     beforeEach(async () => {
-        element = await fixture(`<timer-item id='1' name='Test' time='5450' state='ACTIVE'></timer-item>`);
+        element = await fixture(html`<timer-item id='1' name='Test' time='5450' state='ACTIVE'></timer-item>`);
     });
 
     describe('when state is ACTIVE', () => {

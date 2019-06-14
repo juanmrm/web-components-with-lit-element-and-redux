@@ -1,6 +1,6 @@
 import {LitElement, html} from 'lit-element';
-import '../timer-new-form/timer-new-form'
-import '../timer-list/timer-list'
+import '../timer-new-form/timer-new-form.js';
+import '../timer-list/timer-list.js';
 
 // Access shared state by importing the same Redux store as other elements
 import { store } from './store/store';

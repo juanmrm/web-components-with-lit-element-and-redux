@@ -5,7 +5,8 @@
   "main": "index.html",
   "scripts": {
     "start": "polymer serve -o",
-    "test": "karma start --single-run --browsers ChromeHeadless karma.conf.js"
+    "test": "karma start",
+    "test:watch": "karma start --auto-watch=true --single-run=false"
   },
   "author": "",
   "license": "ISC",
@@ -15,14 +16,18 @@
   },
   "devDependencies": {
     "@babel/core": "^7.4.5",
+    "@babel/plugin-syntax-dynamic-import": "^7.2.0",
+    "@babel/plugin-syntax-import-meta": "^7.2.0",
     "@babel/polyfill": "^7.4.4",
-    "@open-wc/testing-helpers": "^0.9.6",
-    "chai": "^4.2.0",
+    "@babel/preset-env": "^7.4.5",
+    "@open-wc/testing": "^1.0.0",
+    "@webcomponents/webcomponentsjs": "^2.2.10",
+    "babel-loader": "^8.0.6",
+    "babel-plugin-bundled-import-meta": "^0.3.1",
     "eslint": "^5.8.0",
     "istanbul-instrumenter-loader": "^3.0.1",
     "karma": "^4.1.0",
     "karma-babel-preprocessor": "^8.0.0",
-    "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^2.2.0",
     "karma-coverage-istanbul-reporter": "^2.0.5",
     "karma-mocha": "^1.3.0",

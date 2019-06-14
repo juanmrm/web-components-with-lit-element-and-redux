@@ -2,7 +2,8 @@
 var path = require('path');
 
 const webpackConfig = {
-  mode: 'development',
+  // mode: 'development',
+
   module: {
     rules: [
       {
@@ -16,12 +17,27 @@ const webpackConfig = {
         },
       },
       {
+        test: /\.js$|\.ts$/,
+        use: {
+          loader: 'babel-loader',
+
+          options: {
+            plugins: [
+              require.resolve('@babel/plugin-syntax-dynamic-import'),
+              require.resolve('@babel/plugin-syntax-import-meta'),
+              // webpack does not support import.meta.url yet, so we rewrite them in babel
+              [require.resolve('babel-plugin-bundled-import-meta'), { importStyle: 'baseURI' }],
+            ].filter(_ => !!_),
+          },
+        },
+      },
+      {
         test: /\.(png|svg|jpg|gif)$/,
         use: [
           'file-loader'
         ]
       },
-    ],
+    ]
   },
 };
 
@@ -32,11 +48,23 @@ module.exports = function(config) {
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['mocha', 'chai'],
+    
+    frameworks: ['mocha', 'source-map-support'],
 
     // list of files / patterns to load in the browser
     files: [
-        'node_modules/@babel/polyfill/dist/polyfill.js',
+        { 
+          pattern: require.resolve('@babel/polyfill/dist/polyfill.min.js'),
+          watched: false
+        },
+        {
+          pattern: require.resolve('@webcomponents/webcomponentsjs/custom-elements-es5-adapter'),
+          watched: false,
+        },
+        {
+          pattern: require.resolve('@webcomponents/webcomponentsjs/webcomponents-bundle'),
+          watched: false,
+        },
         './src/packages/**/test/timer-item.test.js',
     ],
 
@@ -55,6 +83,10 @@ module.exports = function(config) {
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
     reporters: ['mocha', 'coverage-istanbul'],
+
+    mochaReporter: {
+      showDiff: true,
+    },
 
     client: {
       mocha: {
@@ -100,7 +132,7 @@ module.exports = function(config) {
         base: 'ChromeHeadless',
         flags: ['--no-sandbox', '--disable-setuid-sandbox'],
       },
-    },  
+    },
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits

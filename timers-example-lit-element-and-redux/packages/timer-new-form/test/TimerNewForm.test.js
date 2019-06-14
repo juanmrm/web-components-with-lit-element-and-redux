@@ -1,7 +1,7 @@
 import '../timer-new-form.js';
 import { dispatchCustomEvent } from '../../util/dataHelper.js';
 import sinon from 'sinon';
-import { fixture, aTimeout, oneEvent } from '@open-wc/testing-helpers';
+import { expect, html, fixture, aTimeout, oneEvent } from '@open-wc/testing';
 
 describe('timer-new-form', () => {
     let element;
@@ -10,7 +10,7 @@ describe('timer-new-form', () => {
     let createButton;
 
     beforeEach(async() => {
-        element = await fixture('<timer-new-form></timer-new-form>');
+        element = await fixture(html`<timer-new-form></timer-new-form>`);
         timernameInput = element.shadowRoot.getElementById('timername');
         timertimeInput = element.shadowRoot.getElementById('timertime');
         createButton = element.shadowRoot.getElementById('createBtn');    

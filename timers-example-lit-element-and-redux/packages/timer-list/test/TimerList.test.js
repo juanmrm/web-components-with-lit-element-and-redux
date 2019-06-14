@@ -1,11 +1,11 @@
 import '../timer-list.js';
-import { fixture, nextFrame } from '@open-wc/testing-helpers';
+import { expect, html, fixture } from '@open-wc/testing';
 
 describe('timer-list', () => {
     let element;
 
     beforeEach(async () => {
-        element = await fixture('<timer-list></timer-list>');
+        element = await fixture(html`<timer-list></timer-list>`);
     });
 
     describe('when there are no timers', () =>  {

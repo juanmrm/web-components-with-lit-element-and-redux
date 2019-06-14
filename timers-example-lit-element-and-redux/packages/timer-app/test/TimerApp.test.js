@@ -1,7 +1,7 @@
 import '../timer-app.js';
 import { dispatchCustomEvent } from '../../util/dataHelper.js';
 import sinon from 'sinon';
-import { fixture, aTimeout } from '@open-wc/testing-helpers';
+import { expect, html, fixture } from '@open-wc/testing';
 
 // Access shared state by importing the same Redux store as other elements
 import { store } from '../store/store';
@@ -18,7 +18,7 @@ describe('timer-app', () => {
         // TODO: Restore Store initial state using RESET action or another way?
         store.dispatch(resetState());
 
-        element = await fixture('<timer-app></timer-app>');
+        element = await fixture(html`<timer-app></timer-app>`);
         timerNewForm = element.shadowRoot.querySelector('timer-new-form');
         timerList = element.shadowRoot.querySelector('timer-list');
         timersPayload = [

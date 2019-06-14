@@ -1,3 +1,3 @@
-import TimerNewForm from "./timerNewForm";
+import TimerNewForm from "./TimerNewForm.js";
 
 window.customElements.define("timer-new-form", TimerNewForm);

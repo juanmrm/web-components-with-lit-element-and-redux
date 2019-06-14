@@ -11,7 +11,7 @@
             // Needed to avoid redux Uncaught ReferenceError: process is not defined
             window.process = { env: { NODE_ENV: undefined } };    
         </script>
-        <script type="module" src="./src/packages/timer-app/timer-app.js"></script>
+        <script type="module" src="./packages/timer-app/timer-app.js"></script>
         <timer-app></timer-app>
     </body>
 </html>
