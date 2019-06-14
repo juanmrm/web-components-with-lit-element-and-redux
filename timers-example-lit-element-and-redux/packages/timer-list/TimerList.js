@@ -1,5 +1,5 @@
 import {LitElement, html} from 'lit-element';
-import '../timer-item/timer-item'
+import '../timer-item/timer-item.js'
 
 export default class TimerList extends LitElement {
 

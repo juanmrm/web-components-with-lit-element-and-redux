@@ -2,8 +2,7 @@
 var path = require('path');
 
 const webpackConfig = {
-  // mode: 'development',
-
+  mode: 'development',
   module: {
     rules: [
       {
@@ -18,9 +17,9 @@ const webpackConfig = {
       },
       {
         test: /\.js$|\.ts$/,
+        exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
-
           options: {
             plugins: [
               require.resolve('@babel/plugin-syntax-dynamic-import'),
@@ -30,12 +29,6 @@ const webpackConfig = {
             ].filter(_ => !!_),
           },
         },
-      },
-      {
-        test: /\.(png|svg|jpg|gif)$/,
-        use: [
-          'file-loader'
-        ]
       },
     ]
   },
@@ -65,7 +58,7 @@ module.exports = function(config) {
           pattern: require.resolve('@webcomponents/webcomponentsjs/webcomponents-bundle'),
           watched: false,
         },
-        './src/packages/**/test/timer-item.test.js',
+        'packages/*/test/*.test.js',
     ],
 
     // list of files / patterns to exclude
