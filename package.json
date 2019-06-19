@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.html",
   "scripts": {
-    "start": "polymer serve -o",
+    "start": "owc-dev-server",
     "test": "karma start",
     "test:watch": "karma start --auto-watch=true --single-run=false"
   },
@@ -37,6 +37,7 @@
     "karma-webpack": "^4.0.2",
     "lit-html": "^1.1.0",
     "mocha": "^6.1.4",
+    "owc-dev-server": "^1.0.0",
     "sinon": "^7.3.2",
     "webpack": "^4.33.0"
   }
